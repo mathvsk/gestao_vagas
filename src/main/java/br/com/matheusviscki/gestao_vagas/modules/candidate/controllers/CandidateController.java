@@ -1,6 +1,7 @@
 package br.com.matheusviscki.gestao_vagas.modules.candidate.controllers;
 
 import br.com.matheusviscki.gestao_vagas.modules.candidate.CandidateEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,7 @@ import java.net.http.HttpResponse;
 @RequestMapping("/candidate")
 public class CandidateController {
     @PostMapping("/")
-    public String create(@RequestBody CandidateEntity candidateEntity) {
+    public String create(@Valid @RequestBody CandidateEntity candidateEntity) {
         System.out.println(candidateEntity);
         System.out.println(candidateEntity.getName());
 
