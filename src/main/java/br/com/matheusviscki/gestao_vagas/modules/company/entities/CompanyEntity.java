@@ -12,13 +12,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity(name = "company")
 @Data
 public class CompanyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String UUID;
+    private UUID id;
 
     @NotBlank(message = "O campo [username] é obrigatório")
     @Pattern(regexp = "\\S+", message = "O campo [username] não deve conter espaço")
