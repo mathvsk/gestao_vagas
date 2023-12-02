@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/candidate")
 public class AuthCandidateController {
 
     @Autowired
     private AuthCandidateService authCandidateService;
 
-    @PostMapping("/candidate")
+    @PostMapping("/auth")
     public ResponseEntity<Object> authenticate(@RequestBody AuthCandidateRequestDTO authCandidateRequestDTO) {
 
         try {
