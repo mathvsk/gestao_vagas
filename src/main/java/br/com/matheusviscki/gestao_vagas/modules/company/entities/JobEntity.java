@@ -1,5 +1,6 @@
 package br.com.matheusviscki.gestao_vagas.modules.company.entities;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +22,13 @@ public class JobEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Schema(example = "Vaga para design")
     private String description;
+
+    @Schema(example = "GymPass, Plano de saúde")
     private String benefits;
+
+    @Schema(example = "SENIOR")
     private String level;
 
     @ManyToOne()
