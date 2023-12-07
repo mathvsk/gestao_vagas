@@ -1,6 +1,7 @@
 package br.com.matheusviscki.gestao_vagas.modules.candidate.controllers;
 
 import br.com.matheusviscki.gestao_vagas.modules.candidate.CandidateEntity;
+import br.com.matheusviscki.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.matheusviscki.gestao_vagas.modules.candidate.services.CreateCandidateService;
 import br.com.matheusviscki.gestao_vagas.modules.candidate.services.ListAllJobsByFilterService;
 import br.com.matheusviscki.gestao_vagas.modules.candidate.services.ProfileCandidateService;
@@ -45,6 +46,15 @@ public class CandidateController {
 
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidato", description = "Infromações do candidato")
+    @Operation(summary = "Perfil do candidato", description = "Essa funçao é responsável por buscar as informações do candidato")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class) )
+            }),
+            @ApiResponse(responseCode = "400", description = "Candidato não encontrado")
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> get(HttpServletRequest request) {
         var candidateID = request.getAttribute("candidate_id");
         var convertedCandidateID = UUID.fromString(candidateID.toString());
