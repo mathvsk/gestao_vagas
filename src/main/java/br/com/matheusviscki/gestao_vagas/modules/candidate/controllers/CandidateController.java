@@ -2,7 +2,9 @@ package br.com.matheusviscki.gestao_vagas.modules.candidate.controllers;
 
 import br.com.matheusviscki.gestao_vagas.modules.candidate.CandidateEntity;
 import br.com.matheusviscki.gestao_vagas.modules.candidate.services.CreateCandidateService;
+import br.com.matheusviscki.gestao_vagas.modules.candidate.services.ListAllJobsByFilterService;
 import br.com.matheusviscki.gestao_vagas.modules.candidate.services.ProfileCandidateService;
+import br.com.matheusviscki.gestao_vagas.modules.company.entities.JobEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,5 +48,14 @@ public class CandidateController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @Autowired
+    private ListAllJobsByFilterService listAllJobsByFilterService;
+
+    @GetMapping("/job")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public List<JobEntity> findJobByFilter(@RequestParam String filter) {
+        return this.listAllJobsByFilterService.execute(filter);
     }
 }
