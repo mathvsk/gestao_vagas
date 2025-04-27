@@ -1,5 +1,6 @@
 package com.matheus.gestao_vagas.modules.candidate.controllers;
 
+import com.matheus.gestao_vagas.exceptions.UserFoundException;
 import com.matheus.gestao_vagas.modules.candidate.CandidateEntity;
 import com.matheus.gestao_vagas.modules.candidate.CandidateRepository;
 import jakarta.validation.Valid;
@@ -18,6 +19,12 @@ public class CandidateController {
 
     @PostMapping("/")
     public CandidateEntity create(@Valid @RequestBody CandidateEntity candidateEntity) {
+        this.candidateRepository
+            .findByUsernameOrEmail(candidateEntity.getUsername(), candidateEntity.getEmail())
+            .ifPresent((user) -> {
+                throw new UserFoundException();
+            });
+
         return this.candidateRepository.save(candidateEntity);
     }
 }
