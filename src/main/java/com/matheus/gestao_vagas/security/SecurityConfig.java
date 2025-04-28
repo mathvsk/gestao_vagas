@@ -11,7 +11,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // desabilitar o spring security
-        http.csrf(csrf -> csrf.disable());
+        http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests((auth -> {
+                auth.requestMatchers("/company/").permitAll();
+                auth.requestMatchers("/candidate/").permitAll();
+                auth.anyRequest().authenticated();
+            }));
         return http.build();
     }
 }
