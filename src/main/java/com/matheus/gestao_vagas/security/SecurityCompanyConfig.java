@@ -10,10 +10,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
-public class SecurityConfig {
+public class SecurityCompanyConfig {
 
     @Autowired
     private SecurityFilter securityFilter;
+    private SecurityCompanyFilter securityCompanyFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -24,9 +25,11 @@ public class SecurityConfig {
                 auth.requestMatchers("/candidate/").permitAll();
                 auth.requestMatchers("/auth/company").permitAll();
                 auth.requestMatchers("/auth/candidate").permitAll();
+                auth.requestMatchers("/company/auth").permitAll();
                 auth.anyRequest().authenticated();
             }))
-            .addFilterBefore(this.securityFilter, BasicAuthenticationFilter.class);
+            .addFilterBefore(this.securityCandidateFilter, BasicAuthenticationFilter.class);
+
         return http.build();
     }
 

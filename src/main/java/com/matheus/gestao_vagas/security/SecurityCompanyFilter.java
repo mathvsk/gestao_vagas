@@ -15,13 +15,19 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Component
-public class SecurityFilter extends OncePerRequestFilter {
+public class SecurityCompanyFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (!request.getRequestURI().startsWith("/company")) {
+            filterChain.doFilter(request, response);
+
+            return;
+        }
+
         var authorization = request.getHeader("Authorization");
 
         if (authorization != null && authorization.startsWith("Bearer ")) {
