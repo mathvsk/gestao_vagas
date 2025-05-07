@@ -2,6 +2,7 @@ package com.matheus.gestao_vagas.modules.candidate.controllers;
 
 import com.matheus.gestao_vagas.modules.candidate.CandidateEntity;
 import com.matheus.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
+import com.matheus.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import com.matheus.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,6 +25,9 @@ public class CandidateController {
     @Autowired
     private ProfileCandidateUseCase profileCandidateUseCase;
 
+    @Autowired
+    private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+
     @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity) {
         try {
@@ -42,6 +46,20 @@ public class CandidateController {
 
         try {
             var result = this.profileCandidateUseCase.execute(UUID.fromString(candidateId.toString()));
+
+            return ResponseEntity.ok(result);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/job")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    public ResponseEntity<Object> findJobByFilter(@RequestParam String filter) {
+        try {
+            var result = this.listAllJobsByFilterUseCase.execute(filter);
 
             return ResponseEntity.ok(result);
         } catch (UsernameNotFoundException e) {
