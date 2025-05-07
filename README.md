@@ -1,5 +1,12 @@
 # Gestão Vagas
 
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+![Static Badge](https://img.shields.io/badge/MIT-maker?style=for-the-badge&label=License&labelColor=%23303030&color=%23808080)
+
 **Gestão Vagas** é uma aplicação web desenvolvida em **Java** com **Spring Boot**, voltada para o gerenciamento de vagas de emprego. É uma API simples que permite o cadastro de empresas, candidatos e vagas, utilizando um banco de dados **PostgreSQL** para persistência e autenticação JWT para segurança.
 
 ---
