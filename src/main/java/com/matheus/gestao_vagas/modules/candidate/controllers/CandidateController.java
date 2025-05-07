@@ -1,6 +1,7 @@
 package com.matheus.gestao_vagas.modules.candidate.controllers;
 
 import com.matheus.gestao_vagas.modules.candidate.CandidateEntity;
+import com.matheus.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import com.matheus.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.matheus.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import com.matheus.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/candidate")
+@Tag(name = "Candidato", description = "rotas do candidato")
 public class CandidateController {
 
     @Autowired
@@ -50,6 +52,14 @@ public class CandidateController {
 
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(summary = "Perfil do candidato", description = "Essa função é responsável por buscar as informações do perfil do candidato")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "User not found")
+    })
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> get(HttpServletRequest request) {
         var candidateId = request.getAttribute("candidate_id");
 
@@ -66,7 +76,6 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidato", description = "rotas do candidato")
     @Operation(summary = "Listagem de vagas disponível para o candidato", description = "Essa função é responsável por listar todas as vagas disponíveis, baseada no filtro")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
