@@ -4,6 +4,14 @@ import com.matheus.gestao_vagas.modules.candidate.CandidateEntity;
 import com.matheus.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.matheus.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import com.matheus.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
+import com.matheus.gestao_vagas.modules.jobs.JobEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,15 +65,16 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
+    @Tag(name = "Candidato", description = "rotas do candidato")
+    @Operation(summary = "Listagem de vagas disponível para o candidato", description = "Essa função é responsável por listar todas as vagas disponíveis, baseada no filtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
+            })
+    })
     public ResponseEntity<Object> findJobByFilter(@RequestParam String filter) {
-        try {
-            var result = this.listAllJobsByFilterUseCase.execute(filter);
+        var jobs = this.listAllJobsByFilterUseCase.execute(filter);
 
-            return ResponseEntity.ok(result);
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(jobs);
     }
 }
