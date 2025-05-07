@@ -1,6 +1,6 @@
 package com.matheus.gestao_vagas.security;
 
-import com.matheus.gestao_vagas.providers.JWTProvider;
+import com.matheus.gestao_vagas.providers.JWTCompanyProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.util.Collections;
 public class SecurityCompanyFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JWTProvider jwtProvider;
+    private JWTCompanyProvider jwtCompanyProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +32,7 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
 
         if (authorization != null && authorization.startsWith("Bearer ")) {
             SecurityContextHolder.getContext().setAuthentication(null);
-            var result = this.jwtProvider.validateToken(authorization);
+            var result = this.jwtCompanyProvider.validateToken(authorization);
 
             if (result.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

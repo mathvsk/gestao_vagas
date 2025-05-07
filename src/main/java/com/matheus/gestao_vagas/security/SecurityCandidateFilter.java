@@ -1,7 +1,6 @@
 package com.matheus.gestao_vagas.security;
 
 import com.matheus.gestao_vagas.providers.JWTCandidateProvider;
-import com.matheus.gestao_vagas.providers.JWTProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Component
 public class SecurityCandidateFilter extends OncePerRequestFilter {
