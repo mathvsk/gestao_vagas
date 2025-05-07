@@ -40,6 +40,13 @@ public class CandidateController {
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
 
     @PostMapping("/")
+    @Operation(summary = "Cadastro de candidato", description = "Essa função é responsável por cadastrar um candidato")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = CandidateEntity.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Usuário já existe")
+    })
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity) {
         try {
             var result = this.createCandidateUseCase.execute(candidateEntity);
