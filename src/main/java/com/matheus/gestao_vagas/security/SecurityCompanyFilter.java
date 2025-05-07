@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -32,17 +33,28 @@ public class SecurityCompanyFilter extends OncePerRequestFilter {
 
         if (authorization != null && authorization.startsWith("Bearer ")) {
             SecurityContextHolder.getContext().setAuthentication(null);
-            var result = this.jwtCompanyProvider.validateToken(authorization);
+            var token = this.jwtCompanyProvider.validateToken(authorization);
 
-            if (result.isBlank()) {
+            if (token == null) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
 
             // Adiciona o id do usuário no request
-            request.setAttribute("company_id", result);
+            request.setAttribute("company_id", token.getSubject());
+            var roles = token.getClaim("roles").asList(String.class);
+
+            var grants = roles.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                    .toList();
+
             // Adiciona o usuário autenticado no contexto de segurança e define as roles de acesso
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(result, null, Collections.emptyList());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    token.getSubject(),
+                    null,
+                    grants
+            );
+
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
