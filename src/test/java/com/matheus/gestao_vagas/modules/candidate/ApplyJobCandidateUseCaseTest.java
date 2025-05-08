@@ -1,5 +1,6 @@
 package com.matheus.gestao_vagas.modules.candidate;
 
+import com.matheus.gestao_vagas.exceptions.JobNotFoundException;
 import com.matheus.gestao_vagas.exceptions.UserNotFoundException;
 import com.matheus.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import com.matheus.gestao_vagas.modules.jobs.JobRepository;
@@ -10,6 +11,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ApplyJobCandidateUseCaseTest {
@@ -32,6 +38,21 @@ public class ApplyJobCandidateUseCaseTest {
             this.applyJobCandidateUseCase.execute(null, null);
         } catch (UserNotFoundException e) {
             Assertions.assertInstanceOf(UserNotFoundException.class, e);
+        }
+    }
+
+    @Test
+    public void ShouldNotBeAbleToApplyJobWithNotFoundJob() {
+        var idCandidate = UUID.randomUUID();
+        var candidate = new CandidateEntity();
+        candidate.setId(idCandidate);
+
+        when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(candidate));
+
+        try {
+            this.applyJobCandidateUseCase.execute(idCandidate, null);
+        }catch (JobNotFoundException e) {
+            Assertions.assertInstanceOf(JobNotFoundException.class, e);
         }
     }
 }
