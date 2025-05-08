@@ -20,6 +20,12 @@ public class SecurityConfig {
     @Autowired
     private SecurityCandidateFilter securityCandidateFilter;
 
+    private static final String[] SWAGGER_LIST = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resource/**",
+    };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // desabilitar o spring security
@@ -29,6 +35,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/candidate/").permitAll();
                 auth.requestMatchers("/company/auth").permitAll();
                 auth.requestMatchers("/candidate/auth").permitAll();
+                auth.requestMatchers(SWAGGER_LIST).permitAll();
                 auth.anyRequest().authenticated();
             }))
             .addFilterBefore(this.securityCandidateFilter, BasicAuthenticationFilter.class)
