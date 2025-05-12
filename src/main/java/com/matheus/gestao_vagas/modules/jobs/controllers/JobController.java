@@ -1,5 +1,6 @@
 package com.matheus.gestao_vagas.modules.jobs.controllers;
 
+import com.matheus.gestao_vagas.exceptions.CompanyNotFoundException;
 import com.matheus.gestao_vagas.modules.jobs.JobEntity;
 import com.matheus.gestao_vagas.modules.jobs.dto.CreateJobDTO;
 import com.matheus.gestao_vagas.modules.jobs.useCases.CreateJobUseCase;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,18 +37,22 @@ public class JobController {
             })
     })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<JobEntity> create(@RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
+    public ResponseEntity<Object> create(@RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
         var companyId = request.getAttribute("company_id");
 
-        var jobEntity = JobEntity.builder()
-            .description(createJobDTO.getDescription())
-            .level(createJobDTO.getLevel())
-            .benefits(createJobDTO.getBenefits())
-            .companyId(UUID.fromString(companyId.toString()))
-            .build();
+        try {
+            var jobEntity = JobEntity.builder()
+                    .description(createJobDTO.getDescription())
+                    .level(createJobDTO.getLevel())
+                    .benefits(createJobDTO.getBenefits())
+                    .companyId(UUID.fromString(companyId.toString()))
+                    .build();
 
-        var result = this.createJobUseCase.execute(jobEntity);
+            var result = this.createJobUseCase.execute(jobEntity);
 
-        return ResponseEntity.ok(result);
+            return ResponseEntity.ok(result);
+        } catch (CompanyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
