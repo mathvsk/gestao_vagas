@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres_data:/var/lib/postgresql/data-gestao-vagas
+      - postgres_data:/var/lib/postgresql/data
   prometheus:
     image: prom/prometheus:latest
     container_name: gestao-vagas-prometheus
