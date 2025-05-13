@@ -21,6 +21,13 @@ services:
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
+  grafana:
+    container_name: gestao-vagas-grafana
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    networks:
+      - gv-network
 
 networks:
   gv-network:
@@ -29,3 +36,4 @@ networks:
 volumes:
   postgres_data:
   prometheus_data:
+  grafana_data:
